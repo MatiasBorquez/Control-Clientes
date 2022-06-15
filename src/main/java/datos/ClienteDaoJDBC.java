@@ -10,8 +10,7 @@ import java.util.*;
 public class ClienteDaoJDBC implements IClienteDaoJDBC {
 
     private static final String SQL_SELECT = "SELECT id_cliente, nombre, apellido, email, telefono, saldo FROM cliente";
-    private static final String SQL_SELECT_BY_ID = "SELECT id_cliente, nombre, apellido, email, telefono, saldo FROM cliente"
-            + "WHERE id_cliente = ?";
+    private static final String SQL_SELECT_BY_ID = "SELECT id_cliente, nombre, apellido, email, telefono, saldo FROM cliente WHERE id_cliente = ?";
     private static final String SQL_INSERT = "INSERT INTO cliente(nombre, apellido, email, telefono, saldo) VALUES(?,?,?,?,?)";
     private static final String SQL_UPDATE = "UPDATE cliente SET nombre=?, apellido=?, email=?, telefono=?, saldo=? WHERE "
             + " id_cliente=?";
@@ -108,7 +107,7 @@ public class ClienteDaoJDBC implements IClienteDaoJDBC {
     }
 
     @Override
-    public int editar(Cliente cliente) throws SQLException {
+    public int actualizar(Cliente cliente) throws SQLException {
         Connection conn = null;
         PreparedStatement stmt = null;
         int rows = 0;

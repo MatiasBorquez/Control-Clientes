@@ -18,7 +18,7 @@ public interface IClienteDaoJDBC {
     
     public int insertar(Cliente cliente) throws SQLException;
     
-    public int editar(Cliente cliente) throws SQLException;
+    public int actualizar(Cliente cliente) throws SQLException;
     
     public int eliminar(Cliente cliente) throws SQLException;
 }

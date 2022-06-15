@@ -12,14 +12,19 @@ public class Conexion {
     private static final String JDBC_USER = "root";
     private static final String JDBC_PASSWORD = "admin";
     
+    private static BasicDataSource dataSourse;
+    
     public static DataSource getDataSourse(){
-        BasicDataSource ds = new BasicDataSource();
-        ds.setUrl(JDBC_URL);
-        ds.setUsername(JDBC_USER);
-        ds.setPassword(JDBC_PASSWORD);
-        ds.setInitialSize(5);
+        if(dataSourse==null){
+            dataSourse = new BasicDataSource();
+            dataSourse.setUrl(JDBC_URL);
+            dataSourse.setUsername(JDBC_USER);
+            dataSourse.setPassword(JDBC_PASSWORD);
+            dataSourse.setInitialSize(50);
+        }
         
-        return (DataSource) ds;
+        
+        return dataSourse;
     }
     
     public static Connection getConnection() throws SQLException{
