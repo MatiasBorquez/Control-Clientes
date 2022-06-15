@@ -5,6 +5,8 @@ import dominio.Cliente;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
@@ -25,10 +27,13 @@ public class ServletControlador extends HttpServlet{
     private void accionDefault(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
         try {
             List<Cliente> clientes = new ClienteDaoJDBC().listar();
-            request.setAttribute("clientes", clientes);
-            request.setAttribute("totalClientes", clientes.size());
-            request.setAttribute("saldoTotal", this.calcularSaldoTotal(clientes));
-            request.getRequestDispatcher("clientes.jsp").forward(request, response);
+            HttpSession sesion = request.getSession();
+            sesion.setAttribute("clientes", clientes);
+            sesion.setAttribute("totalClientes", clientes.size());
+            sesion.setAttribute("saldoTotal", this.calcularSaldoTotal(clientes));
+            //el url no cambia
+            //request.getRequestDispatcher("clientes.jsp").forward(request, response);
+            response.sendRedirect("clientes.jsp");
         } catch (SQLException ex) {
             ex.printStackTrace(System.out);
         }
@@ -48,8 +53,15 @@ public class ServletControlador extends HttpServlet{
         if (accion != null){
             switch (accion) {
                 case "insertar":
-                    this.insertarCliente(request, response);
+                {
+                    try {
+                        this.insertarCliente(request, response);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace(System.out);
+                    }
+                }
                     break;
+
                 default:
                     this.accionDefault(request, response);
             }
@@ -59,7 +71,7 @@ public class ServletControlador extends HttpServlet{
         
     }
     
-    private void insertarCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+    private void insertarCliente(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
         //recuperamos los valores del formulario agregarCliente
         String nombre = request.getParameter("nombre");
         String apellido = request.getParameter("apellido");
@@ -76,6 +88,7 @@ public class ServletControlador extends HttpServlet{
         
         //Insertamos el nuevo objeto en la base de datos
         int registrosModificados = new ClienteDaoJDBC().insertar(cliente);
+        System.out.println(registrosModificados);
         
         //registramos los nuevos clientes
         this.accionDefault(request, response);
